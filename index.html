@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LudvigShop - Магазин приложений</title>
+    <title>LudvigShop - App Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -42,9 +42,44 @@
                 opacity: 0.5;
             }
         }
+        .download-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
+    <!-- Download Modal -->
+    <div id="downloadModal" class="download-modal">
+        <div class="modal-content">
+            <span class="close float-right text-xl cursor-pointer">&times;</span>
+            <h3 class="text-xl font-bold mb-4" id="modalAppTitle">Download App</h3>
+            <div class="mb-4">
+                <label class="block mb-2">Select Platform:</label>
+                <select id="platformSelect" class="w-full p-2 border rounded">
+                    <option value="windows">Windows (.exe)</option>
+                    <option value="android">Android (.apk)</option>
+                    <option value="mac">MacOS (.dmg)</option>
+                </select>
+            </div>
+            <button id="confirmDownload" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Download Now</button>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -54,24 +89,24 @@
             </div>
             
             <div class="hidden md:flex items-center space-x-6">
-                <a href="#" class="text-gray-700 hover:text-blue-500">Главная</a>
+                <a href="#" class="text-gray-700 hover:text-blue-500">Home</a>
                 <div class="dropdown relative">
                     <button class="text-gray-700 hover:text-blue-500 flex items-center">
-                        Платформы <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        Platforms <i class="fas fa-chevron-down ml-1 text-xs"></i>
                     </button>
                     <div class="dropdown-menu absolute hidden bg-white shadow-lg rounded-md mt-2 py-1 w-40">
                         <a href="#" class="block px-4 py-2 hover:bg-blue-50 text-gray-700">Windows</a>
                         <a href="#" class="block px-4 py-2 hover:bg-blue-50 text-gray-700">Android</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-blue-50 text-gray-700">Все</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-blue-50 text-gray-700">All</a>
                     </div>
                 </div>
-                <a href="#" class="text-gray-700 hover:text-blue-500">Топ-чарты</a>
-                <a href="#" class="text-gray-700 hover:text-blue-500">Категории</a>
+                <a href="#" class="text-gray-700 hover:text-blue-500">Top Charts</a>
+                <a href="#" class="text-gray-700 hover:text-blue-500">Categories</a>
             </div>
             
             <div class="flex items-center space-x-4">
                 <div class="relative hidden md:block">
-                    <input type="text" placeholder="Поиск приложений..." class="search-input pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-blue-500 w-64">
+                    <input type="text" placeholder="Search apps..." class="search-input pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-blue-500 w-64">
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <button class="md:hidden text-gray-700">
@@ -89,7 +124,7 @@
         <!-- Mobile search -->
         <div class="md:hidden bg-white px-4 py-2 border-t">
             <div class="relative">
-                <input type="text" placeholder="Поиск приложений..." class="search-input pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-blue-500 w-full">
+                <input type="text" placeholder="Search apps..." class="search-input pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-blue-500 w-full">
                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
         </div>
@@ -99,11 +134,11 @@
     <section class="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-12">
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-8 md:mb-0">
-                <h2 class="text-4xl font-bold mb-4">Лучшие приложения для Windows и Android</h2>
-                <p class="text-xl mb-6">Откройте для себя приложении, игры и инструменты для ваших устройств</p>
+                <h2 class="text-4xl font-bold mb-4">Best Apps for Windows and Android</h2>
+                <p class="text-xl mb-6">Discover applications, games and tools for your devices</p>
                 <div class="flex space-x-4">
-                    <button class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">Популярные</button>
-                    <button class="border-2 border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition">Новинки</button>
+                    <button class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">Popular</button>
+                    <button class="border-2 border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition">New Releases</button>
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-center">
@@ -124,15 +159,15 @@
     <!-- Categories -->
     <section class="py-8 bg-white">
         <div class="container mx-auto px-4">
-            <h3 class="text-2xl font-bold mb-6 text-gray-800">Категории</h3>
+            <h3 class="text-2xl font-bold mb-6 text-gray-800">Categories</h3>
             <div class="flex overflow-x-auto pb-4 space-x-3 scrollbar-hide">
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white active">Все</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Игры</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Социальные</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Продуктивность</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Мультимедиа</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Образование</button>
-                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Утилиты</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white active">All</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Games</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Social</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Productivity</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Multimedia</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Education</button>
+                <button class="category-btn flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-500 hover:text-white">Utilities</button>
             </div>
         </div>
     </section>
@@ -141,8 +176,8 @@
     <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center mb-8">
-                <h3 class="text-2xl font-bold text-gray-800">Рекомендуемые приложения</h3>
-                <a href="#" class="text-blue-500 hover:underline">Смотреть все</a>
+                <h3 class="text-2xl font-bold text-gray-800">Featured Apps</h3>
+                <a href="#" class="text-blue-500 hover:underline">View All</a>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -154,13 +189,17 @@
                         <div class="flex items-start justify-between">
                             <div>
                                 <h4 class="font-bold text-lg mb-1 text-gray-800">PhotoEditor Pro</h4>
-                                <p class="text-gray-600 text-sm">Инструменты для редактирования фото</p>
+                                <p class="text-gray-600 text-sm">Photo editing tools</p>
                             </div>
                             <span class="text-yellow-400 text-sm"><i class="fas fa-star"></i> 4.8</span>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Бесплатно</span>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Установить</button>
+                            <span class="text-gray-500 text-sm">Free</span>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600" 
+                                    data-app="PhotoEditor Pro" 
+                                    data-windows="https://example.com/download/photoeditor.exe"
+                                    data-android="https://example.com/download/photoeditor.apk"
+                                    data-mac="https://example.com/download/photoeditor.dmg">Download</button>
                         </div>
                     </div>
                 </div>
@@ -173,13 +212,17 @@
                         <div class="flex items-start justify-between">
                             <div>
                                 <h4 class="font-bold text-lg mb-1 text-gray-800">TaskMaster</h4>
-                                <p class="text-gray-600 text-sm">Менеджер задач и проектов</p>
+                                <p class="text-gray-600 text-sm">Task and project manager</p>
                             </div>
                             <span class="text-yellow-400 text-sm"><i class="fas fa-star"></i> 4.6</span>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
                             <span class="text-gray-500 text-sm">$9.99</span>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Купить</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="TaskMaster"
+                                    data-windows="https://example.com/download/taskmaster.exe"
+                                    data-android="https://example.com/download/taskmaster.apk"
+                                    data-mac="https://example.com/download/taskmaster.dmg">Buy</button>
                         </div>
                     </div>
                 </div>
@@ -192,13 +235,17 @@
                         <div class="flex items-start justify-between">
                             <div>
                                 <h4 class="font-bold text-lg mb-1 text-gray-800">Fitness Tracker</h4>
-                                <p class="text-gray-600 text-sm">Отслеживание тренировок и питания</p>
+                                <p class="text-gray-600 text-sm">Workout and nutrition tracker</p>
                             </div>
                             <span class="text-yellow-400 text-sm"><i class="fas fa-star"></i> 4.7</span>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
-                            <span class="text-gray-500 text-sm">Бесплатно</span>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Установить</button>
+                            <span class="text-gray-500 text-sm">Free</span>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="Fitness Tracker"
+                                    data-windows="https://example.com/download/fitness.exe"
+                                    data-android="https://example.com/download/fitness.apk"
+                                    data-mac="https://example.com/download/fitness.dmg">Download</button>
                         </div>
                     </div>
                 </div>
@@ -211,13 +258,17 @@
                         <div class="flex items-start justify-between">
                             <div>
                                 <h4 class="font-bold text-lg mb-1 text-gray-800">CodeEditor X</h4>
-                                <p class="text-gray-600 text-sm">Редактор кода для разработчиков</p>
+                                <p class="text-gray-600 text-sm">Code editor for developers</p>
                             </div>
                             <span class="text-yellow-400 text-sm"><i class="fas fa-star"></i> 4.9</span>
                         </div>
                         <div class="mt-4 flex justify-between items-center">
                             <span class="text-gray-500 text-sm">$14.99</span>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Купить</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="CodeEditor X"
+                                    data-windows="https://example.com/download/codeeditor.exe"
+                                    data-android="https://example.com/download/codeeditor.apk"
+                                    data-mac="https://example.com/download/codeeditor.dmg">Buy</button>
                         </div>
                     </div>
                 </div>
@@ -229,11 +280,11 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center mb-8">
-                <h3 class="text-2xl font-bold text-gray-800">Топ-чарты</h3>
+                <h3 class="text-2xl font-bold text-gray-800">Top Charts</h3>
                 <div class="flex space-x-2">
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded-full text-sm">Неделя</button>
-                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm">Месяц</button>
-                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm">Год</button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-full text-sm">Weekly</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm">Monthly</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm">Yearly</button>
                 </div>
             </div>
             
@@ -241,7 +292,7 @@
                 <!-- Top Free Apps -->
                 <div class="bg-gray-50 rounded-xl p-6">
                     <h4 class="font-bold text-lg mb-4 text-gray-800 flex items-center">
-                        <i class="fas fa-crown text-yellow-500 mr-2"></i> Бесплатные
+                        <i class="fas fa-crown text-yellow-500 mr-2"></i> Free
                     </h4>
                     <div class="space-y-4">
                         <!-- App 1 -->
@@ -250,9 +301,13 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">WhatsApp Messenger</h5>
-                                <p class="text-gray-500 text-sm">Общение с друзьями и семьей</p>
+                                <p class="text-gray-500 text-sm">Chat with friends and family</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Установить</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="WhatsApp Messenger"
+                                    data-windows="https://example.com/download/whatsapp.exe"
+                                    data-android="https://example.com/download/whatsapp.apk"
+                                    data-mac="https://example.com/download/whatsapp.dmg">Install</button>
                         </div>
                         
                         <!-- App 2 -->
@@ -261,9 +316,13 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">TikTok</h5>
-                                <p class="text-gray-500 text-sm">Короткие видео</p>
+                                <p class="text-gray-500 text-sm">Short videos</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Установить</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="TikTok"
+                                    data-windows="https://example.com/download/tiktok.exe"
+                                    data-android="https://example.com/download/tiktok.apk"
+                                    data-mac="https://example.com/download/tiktok.dmg">Install</button>
                         </div>
                         
                         <!-- App 3 -->
@@ -272,18 +331,22 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">Spotify Music</h5>
-                                <p class="text-gray-500 text-sm">Стриминг музыки</p>
+                                <p class="text-gray-500 text-sm">Music streaming</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">Установить</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="Spotify Music"
+                                    data-windows="https://example.com/download/spotify.exe"
+                                    data-android="https://example.com/download/spotify.apk"
+                                    data-mac="https://example.com/download/spotify.dmg">Install</button>
                         </div>
                     </div>
-                    <a href="#" class="block text-center text-blue-500 mt-4 hover:underline">Показать все</a>
+                    <a href="#" class="block text-center text-blue-500 mt-4 hover:underline">Show All</a>
                 </div>
                 
                 <!-- Top Paid Apps -->
                 <div class="bg-gray-50 rounded-xl p-6">
                     <h4 class="font-bold text-lg mb-4 text-gray-800 flex items-center">
-                        <i class="fas fa-gem text-purple-500 mr-2"></i> Платные
+                        <i class="fas fa-gem text-purple-500 mr-2"></i> Paid
                     </h4>
                     <div class="space-y-4">
                         <!-- App 1 -->
@@ -292,9 +355,13 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">ProCamera X</h5>
-                                <p class="text-gray-500 text-sm">Профессиональная съемка</p>
+                                <p class="text-gray-500 text-sm">Professional photography</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">$4.99</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="ProCamera X"
+                                    data-windows="https://example.com/download/procamera.exe"
+                                    data-android="https://example.com/download/procamera.apk"
+                                    data-mac="https://example.com/download/procamera.dmg">$4.99</button>
                         </div>
                         
                         <!-- App 2 -->
@@ -303,9 +370,13 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">PDF Expert</h5>
-                                <p class="text-gray-500 text-sm">Редактор PDF файлов</p>
+                                <p class="text-gray-500 text-sm">PDF file editor</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">$9.99</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="PDF Expert"
+                                    data-windows="https://example.com/download/pdfexpert.exe"
+                                    data-android="https://example.com/download/pdfexpert.apk"
+                                    data-mac="https://example.com/download/pdfexpert.dmg">$9.99</button>
                         </div>
                         
                         <!-- App 3 -->
@@ -314,12 +385,16 @@
                             <img src="https://via.placeholder.com/50x50?text=App" alt="App Icon" class="w-12 h-12 rounded-lg mr-3">
                             <div class="flex-grow">
                                 <h5 class="font-semibold text-gray-800">Darkroom Pro</h5>
-                                <p class="text-gray-500 text-sm">Фоторедактор премиум-класса</p>
+                                <p class="text-gray-500 text-sm">Premium photo editor</p>
                             </div>
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600">$6.99</button>
+                            <button class="download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600"
+                                    data-app="Darkroom Pro"
+                                    data-windows="https://example.com/download/darkroom.exe"
+                                    data-android="https://example.com/download/darkroom.apk"
+                                    data-mac="https://example.com/download/darkroom.dmg">$6.99</button>
                         </div>
                     </div>
-                    <a href="#" class="block text-center text-blue-500 mt-4 hover:underline">Показать все</a>
+                    <a href="#" class="block text-center text-blue-500 mt-4 hover:underline">Show All</a>
                 </div>
             </div>
         </div>
@@ -329,8 +404,8 @@
     <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center mb-8">
-                <h3 class="text-2xl font-bold text-gray-800">Новые релизы</h3>
-                <a href="#" class="text-blue-500 hover:underline">Смотреть все</a>
+                <h3 class="text-2xl font-bold text-gray-800">New Releases</h3>
+                <a href="#" class="text-blue-500 hover:underline">View All</a>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -368,24 +443,28 @@
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
             <h3 class="text-2xl font-bold mb-8 text-gray-800 flex items-center">
-                <i class="fas fa-award text-yellow-500 mr-2"></i> Выбор редакции
+                <i class="fas fa-award text-yellow-500 mr-2"></i> Editor's Choice
             </h3>
             
             <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
-                    <h4 class="text-3xl font-bold mb-4 text-gray-800">Notion — все в одном рабочем пространстве</h4>
-                    <p class="text-gray-600 mb-6">Notion объединяет заметки, задачи, базы данных и календари в одном мощном инструменте. Идеально для команд и индивидуального использования.</p>
+                    <h4 class="text-3xl font-bold mb-4 text-gray-800">Notion - All-in-One Workspace</h4>
+                    <p class="text-gray-600 mb-6">Notion combines notes, tasks, databases and calendars in one powerful tool. Perfect for teams and individual use.</p>
                     <div class="flex flex-wrap gap-3">
-                        <span class="bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">Продуктивность</span>
+                        <span class="bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">Productivity</span>
                         <span class="bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">Windows</span>
                         <span class="bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">Android</span>
                     </div>
                     <div class="mt-6 flex space-x-4">
-                        <button class="bg-blue-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-600 transition flex items-center">
-                            <i class="fas fa-download mr-2"></i> Установить
+                        <button class="download-btn bg-blue-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-600 transition flex items-center"
+                                data-app="Notion"
+                                data-windows="https://example.com/download/notion.exe"
+                                data-android="https://example.com/download/notion.apk"
+                                data-mac="https://example.com/download/notion.dmg">
+                            <i class="fas fa-download mr-2"></i> Download
                         </button>
                         <button class="border border-blue-500 text-blue-500 px-6 py-2 rounded-full font-semibold hover:bg-blue-50 transition">
-                            Подробнее
+                            Learn More
                         </button>
                     </div>
                 </div>
@@ -409,7 +488,7 @@
                         <i class="fas fa-shopping-bag text-blue-400 text-2xl"></i>
                         <h3 class="text-xl font-bold text-white">LudvigShop</h3>
                     </div>
-                    <p class="mb-4">Лучший магазин приложений для Windows и Android устройств.</p>
+                    <p class="mb-4">The best app store for Windows and Android devices.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
@@ -419,42 +498,42 @@
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Магазин</h4>
+                    <h4 class="text-white font-semibold mb-4">Store</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white">Приложения</a></li>
-                        <li><a href="#" class="hover:text-white">Игры</a></li>
-                        <li><a href="#" class="hover:text-white">Подписки</a></li>
-                        <li><a href="#" class="hover:text-white">Подарочные карты</a></li>
+                        <li><a href="#" class="hover:text-white">Apps</a></li>
+                        <li><a href="#" class="hover:text-white">Games</a></li>
+                        <li><a href="#" class="hover:text-white">Subscriptions</a></li>
+                        <li><a href="#" class="hover:text-white">Gift Cards</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Поддержка</h4>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white">Помощь</a></li>
-                        <li><a href="#" class="hover:text-white">Сообщество</a></li>
-                        <li><a href="#" class="hover:text-white">Безопасность</a></li>
-                        <li><a href="#" class="hover:text-white">Контакты</a></li>
+                        <li><a href="#" class="hover:text-white">Help</a></li>
+                        <li><a href="#" class="hover:text-white">Community</a></li>
+                        <li><a href="#" class="hover:text-white">Security</a></li>
+                        <li><a href="#" class="hover:text-white">Contact Us</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Компания</h4>
+                    <h4 class="text-white font-semibold mb-4">Company</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white">О нас</a></li>
-                        <li><a href="#" class="hover:text-white">Карьера</a></li>
-                        <li><a href="#" class="hover:text-white">Разработчикам</a></li>
-                        <li><a href="#" class="hover:text-white">Блог</a></li>
+                        <li><a href="#" class="hover:text-white">About</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Developers</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 mb-4 md:mb-0">© 2023 LudvigShop. Все права защищены.</p>
+                <p class="text-gray-500 mb-4 md:mb-0">© 2023 LudvigShop. All rights reserved.</p>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-gray-500 hover:text-white">Условия использования</a>
-                    <a href="#" class="text-gray-500 hover:text-white">Политика конфиденциальности</a>
-                    <a href="#" class="text-gray-500 hover:text-white">Настройки cookies</a>
+                    <a href="#" class="text-gray-500 hover:text-white">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-white">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-white">Cookie Settings</a>
                 </div>
             </div>
         </div>
@@ -481,13 +560,69 @@
                             <span class="platform-badge bg-green-500 text-white">Android</span>
                             <img src="https://via.placeholder.com/300x200?text=New+App" alt="New App" class="w-full h-32 rounded-lg mb-3">
                         </div>
-                        <h5 class="font-semibold text-gray-800">Новое приложение</h5>
-                        <p class="text-gray-500 text-sm">Категория</p>
-                        <button class="mt-2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600 w-full">Установить</button>
+                        <h5 class="font-semibold text-gray-800">New App</h5>
+                        <p class="text-gray-500 text-sm">Category</p>
+                        <button class="mt-2 download-btn bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600 w-full"
+                                data-app="New App"
+                                data-windows="https://example.com/download/newapp.exe"
+                                data-android="https://example.com/download/newapp.apk"
+                                data-mac="https://example.com/download/newapp.dmg">Download</button>
                     `;
                     loader.classList.remove('skeleton-loader');
                 });
             }, 1500);
+
+            // Download functionality
+            const modal = document.getElementById('downloadModal');
+            const closeBtn = document.querySelector('.close');
+            const confirmBtn = document.getElementById('confirmDownload');
+            const platformSelect = document.getElementById('platformSelect');
+            const modalTitle = document.getElementById('modalAppTitle');
+            
+            let currentDownloadLinks = {};
+            
+            // Add click handlers to all download buttons
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentDownloadLinks = {
+                        windows: this.dataset.windows,
+                        android: this.dataset.android,
+                        mac: this.dataset.mac
+                    };
+                    modalTitle.textContent = `Download ${this.dataset.app}`;
+                    modal.style.display = 'block';
+                });
+            });
+            
+            // Close modal
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Confirm download
+            confirmBtn.addEventListener('click', function() {
+                const platform = platformSelect.value;
+                const downloadUrl = currentDownloadLinks[platform];
+                
+                if (downloadUrl) {
+                    // Create temporary link to trigger download
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = '';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+                
+                modal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>
